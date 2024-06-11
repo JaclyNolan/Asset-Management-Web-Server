@@ -39,3 +39,9 @@ Start the development server with:
 npm run dev
 ```
 Open your browser and navigate to http://localhost:5173 to see your running application.
+
+## Project Structure
+
+The project structure is based on these two articles:
+1. https://harshalingole.hashnode.dev/ultimate-guide-to-react-folder-structure-for-enterprise-level-applications
+2. https://www.tiepphan.com/practical-react-project-structure-2024/ 
