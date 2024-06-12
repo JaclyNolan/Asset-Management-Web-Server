@@ -2,6 +2,7 @@ import { Box, IconButton, InputLabel, MenuItem, Pagination, Paper, Select, Selec
 import { FC, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { User, UserType } from "../../../types/user";
+import { Edit, HighlightOff } from "@mui/icons-material";
 
 interface UserListResponse {
     data: User[],
@@ -59,10 +60,10 @@ const UserListPage: FC = () => {
                                     <TableCell>{user.type}</TableCell>
                                     <TableCell align="center">
                                         <IconButton>
-                                            <EditIcon />
+                                            <Edit />
                                         </IconButton>
                                         <IconButton>
-                                            <DeleteIcon />
+                                            <HighlightOff />
                                         </IconButton>
                                     </TableCell>
                                 </TableRow>
