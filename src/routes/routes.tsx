@@ -3,7 +3,7 @@ import { routeNames } from '../constants/routeName';
 import { AdminLayout } from '../layouts/adminLayout';
 import { HomePage } from '../pages/homePage';
 import UserListPage from '../pages/user/userList/UserListPage';
-import { CreateUserPage } from '../pages/manageUserPage';
+import CreateUserPage from '../pages/user/userCreate/CreateUserPage';
 
 export const commonRoutes: RouteObject[] = [
     {
