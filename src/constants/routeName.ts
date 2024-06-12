@@ -6,6 +6,7 @@ export const routeNames = {
     notFound: "/404",
     serverError: "/server-error",
     user: {
-        list: "/users"
-    }
+        list: "/users",
+        create: "/users/create"
+    },
 }
