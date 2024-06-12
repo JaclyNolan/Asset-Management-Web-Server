@@ -5,4 +5,7 @@ export const routeNames = {
     forbidden: "/forbidden",
     notFound: "/404",
     serverError: "/server-error",
+    user: {
+        list: "/users"
+    }
 }
