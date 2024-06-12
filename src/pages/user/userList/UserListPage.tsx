@@ -3,6 +3,8 @@ import { FC, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { User, UserType } from "../../../types/user";
 import { Edit, HighlightOff } from "@mui/icons-material";
+import { CustomTableHead, CustomTableCell, StyledTableCell } from "../../../components/table";
+import { Order, TableHeadInfo } from "../../../components/table/CustomTableHead";
 
 interface UserListResponse {
     data: User[],
@@ -21,11 +23,54 @@ const RootBox = styled(Box)(() => ({
     width: '100%',
 }))
 
+const StyledTableContainer = styled(TableContainer)(() => ({
+    border: '0px',
+}))
+
+
+const TABLE_HEAD: TableHeadInfo[] = [
+    {
+        id: "code",
+        label: "Staff Code",
+        sortable: true
+    },
+    {
+        id: "fullName",
+        label: "Full Name",
+        sortable: true
+    },
+    {
+        id: "username",
+        label: "Username",
+    },
+    {
+        id: "joinedDate",
+        label: "Joined Date",
+        sortable: true
+    },
+    {
+        id: "type",
+        label: "Type",
+        sortable: true
+    },
+]
+
 const UserListPage: FC = () => {
     const [userType, setUserType] = useState<UserType | "all">()
+    const [order, setOrder] = useState<Order>('desc');
+    const [orderBy, setOrderBy] = useState<string>(TABLE_HEAD[0].id);
 
     const handleTypeFilter = (event: SelectChangeEvent) => {
         setUserType(event.target.value as UserType | "all")
+    }
+
+    const onRequestSort = (property: string) => {
+        if (orderBy === property) {
+            setOrder(order === "asc" ? "desc" : "asc")
+            return
+        }
+        setOrderBy(property);
+        setOrder("desc");
     }
     return (
         <>
@@ -43,34 +88,29 @@ const UserListPage: FC = () => {
                     </Select>
                     <TextField variant="outlined" size="small" placeholder="Search" />
                 </Box>
-                <TableContainer component={Paper}>
+                <TableContainer>
                     <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Staff Code</TableCell>
-                                <TableCell>Full Name</TableCell>
-                                <TableCell>Username</TableCell>
-                                <TableCell>Joined Date</TableCell>
-                                <TableCell>Type</TableCell>
-                                <TableCell align="center">Actions</TableCell>
-                            </TableRow>
-                        </TableHead>
+                        <CustomTableHead
+                            columns={TABLE_HEAD}
+                            order={order}
+                            orderBy={orderBy}
+                            onRequestSort={onRequestSort} />
                         <TableBody>
                             {users.map((user) => (
                                 <TableRow key={user.id}>
-                                    <TableCell>{user.id}</TableCell>
-                                    <TableCell>{user.name}</TableCell>
-                                    <TableCell>{user.username}</TableCell>
-                                    <TableCell>{user.joined}</TableCell>
-                                    <TableCell>{user.type}</TableCell>
-                                    <TableCell align="center">
+                                    <CustomTableCell>{user.id}</CustomTableCell>
+                                    <CustomTableCell>{user.name}</CustomTableCell>
+                                    <CustomTableCell>{user.username}</CustomTableCell>
+                                    <CustomTableCell>{user.joined}</CustomTableCell>
+                                    <CustomTableCell>{user.type}</CustomTableCell>
+                                    <StyledTableCell align="center">
                                         <IconButton>
                                             <Edit />
                                         </IconButton>
                                         <IconButton>
                                             <HighlightOff />
                                         </IconButton>
-                                    </TableCell>
+                                    </StyledTableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
