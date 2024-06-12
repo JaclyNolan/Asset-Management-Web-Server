@@ -1,4 +1,4 @@
-import { Box, IconButton, InputLabel, MenuItem, Pagination, Paper, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
+import { Box, IconButton, InputLabel, MenuItem, Pagination, Paper, Select, SelectChangeEvent, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
 import { FC, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { User, UserType } from "../../../types/user";
@@ -16,6 +16,11 @@ const users = [
     // Add other users here...
 ];
 
+const RootBox = styled(Box)(() => ({
+    minWidth: '30rem',
+    width: '100%',
+}))
+
 const UserListPage: FC = () => {
     const [userType, setUserType] = useState<UserType | "all">()
 
@@ -27,7 +32,7 @@ const UserListPage: FC = () => {
             <Helmet>
                 <title>Manage User</title>
             </Helmet>
-            <Box>
+            <RootBox>
                 <Box display="flex" justifyContent="space-between" alignItems="center" p={2}>
                     <Select defaultValue="" displayEmpty>
                         <MenuItem value="">
@@ -74,7 +79,7 @@ const UserListPage: FC = () => {
                 <Box display="flex" justifyContent="center" p={2}>
                     <Pagination count={3} page={1} />
                 </Box>
-            </Box>
+            </RootBox>
 
         </>
     )
