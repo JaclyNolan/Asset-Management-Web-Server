@@ -5,4 +5,5 @@ export const routeNames = {
     forbidden: "/forbidden",
     notFound: "/404",
     serverError: "/server-error",
+    createUser: "/create-user",
 }
