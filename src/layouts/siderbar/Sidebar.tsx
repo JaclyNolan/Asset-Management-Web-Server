@@ -1,7 +1,9 @@
 import { List, ListItem, ListItemText, styled } from '@mui/material';
 import { FC, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { routeNames } from '../../constants/routeName';
 
-const StyledListItem = styled(ListItem)<{ active?: boolean }>(({ theme, active }) => ({
+const StyledListItem = styled(ListItem)<{ active: boolean }>(({ theme, active }) => ({
     backgroundColor: active ? theme.palette.primary.main : theme.palette.lightGrey.main,
     color: active ? 'white' : 'black',
     '&:hover': {
@@ -14,32 +16,39 @@ const StyledList = styled(List) (() => ({
     minWidth: '15rem',
 }))
 
+interface SidebarItem {
+    label: string,
+    to?: string
+}
+
 const Sidebar: FC = () => {
     const [activeItem, setActiveItem] = useState('Manage User');
+    const navigate = useNavigate();
 
-    const menuItems = [
-        { text: 'Home' },
-        { text: 'Manage User' },
-        { text: 'Manage Asset' },
-        { text: 'Manage Assignment' },
-        { text: 'Request for Returning' },
-        { text: 'Report' },
+    const menuItems: SidebarItem[] = [
+        { label: 'Home', to: routeNames.index },
+        { label: 'Manage User', to: routeNames.user.list },
+        { label: 'Manage Asset' },
+        { label: 'Manage Assignment' },
+        { label: 'Request for Returning' },
+        { label: 'Report' },
     ];
 
-    const handleItemClick = (text: string) => {
-        setActiveItem(text);
+    const handleItemClick = (item: SidebarItem) => {
+        setActiveItem(item.label);
+        if (item.to) navigate(item.to);
     };
 
     return (
         <StyledList>
-            {menuItems.map((item, index) => (
+            {menuItems.map((item) => (
                 <StyledListItem
-                    key={index}
-                    active={activeItem === item.text}
-                    onClick={() => handleItemClick(item.text)}
+                    key={item.label}
+                    active={activeItem === item.label}
+                    onClick={() => handleItemClick(item)}
                 >
                     <ListItemText
-                        primary={item.text}
+                        primary={item.label}
                         primaryTypographyProps={{
                             fontWeight: 'bold' ,
                         }} />

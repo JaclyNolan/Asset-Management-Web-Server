@@ -1,13 +1,13 @@
-import { Box, Button, IconButton, InputLabel, MenuItem, Modal, Pagination, Paper, Select, SelectChangeEvent, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from "@mui/material";
-import { FC, useState } from "react";
+import { Edit, HighlightOff, Search } from "@mui/icons-material";
+import { Box, Button, Divider, IconButton, InputBase, MenuItem, Pagination, Paper, Select, SelectChangeEvent, styled, Table, TableBody, TableContainer, TableRow } from "@mui/material";
+import { FC, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { User, UserType } from "../../../types/user";
-import { Edit, HighlightOff } from "@mui/icons-material";
-import { CustomTableHead, CustomTableCell, StyledTableCell } from "../../../components/table";
-import { Order, TableHeadInfo } from "../../../components/table/CustomTableHead";
 import { NoStyleLink } from "../../../components/noStyleLink";
-import { routeNames } from "../../../constants/routeName";
 import { CustomPopover } from "../../../components/popover";
+import { CustomTableCell, CustomTableHead, StyledTableCell } from "../../../components/table";
+import { Order, TableHeadInfo } from "../../../components/table/CustomTableHead";
+import { routeNames } from "../../../constants/routeName";
+import { User, UserType } from "../../../types/user";
 
 interface UserListResponse {
     data: User[],
@@ -65,6 +65,7 @@ const UserListPage: FC = () => {
     const [orderBy, setOrderBy] = useState<string>(TABLE_HEAD[0].id);
     const [rowAnchorEl, setRowAnchorEl] = useState<HTMLElement | null>(null);
     const [deleteAnchorEl, setDeleteAnchorEl] = useState<HTMLElement | null>(null);
+    const inputRef = useRef<HTMLInputElement | null>(null);
 
     const handleTypeFilter = (event: SelectChangeEvent) => {
         setUserType(event.target.value as UserType | "all");
@@ -95,6 +96,20 @@ const UserListPage: FC = () => {
         setRowAnchorEl(null);
         setDeleteAnchorEl(null);
     };
+
+    const handleSearchSubmit = () => {
+        if (inputRef.current) {
+            const searchQuery = inputRef.current.value;
+            // Handle search submit logic
+            setSearch(searchQuery);
+        }
+    };
+
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            handleSearchSubmit();
+        }
+    };
     return (
         <>
             <Helmet>
@@ -109,22 +124,31 @@ const UserListPage: FC = () => {
                         <MenuItem value="Admin">Admin</MenuItem>
                         <MenuItem value="Staff">Staff</MenuItem>
                     </Select>
-                    <Box>
-                        <TextField
+                    <Box display={'flex'}>
+                        <Paper
                             variant="outlined"
-                            size="small"
-                            placeholder="Search"
-                            value={search}
-                            onChange={handleSearchChange}
-                        />
+                            sx={{ padding: '0 0.5rem', display: 'flex', alignItems: 'center', minWidth: '20rem'}}
+                        >
+                            <InputBase
+                                inputRef={inputRef}
+                                sx={{ ml: 1, flex: 1 }}
+                                placeholder="Search user by code and name"
+                                inputProps={{ 'aria-label': 'search google maps' }}
+                                onKeyUp={handleKeyPress}
+                            />
+                            <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+                            <IconButton type="button" sx={{ p: '10px' }} aria-label="search" onClick={handleSearchSubmit}>
+                                <Search />
+                            </IconButton>
+                        </Paper>
                         <NoStyleLink to={routeNames.user.create}>
-                            <Button sx={{ marginLeft: "1rem" }} variant="contained" color="primary">
+                            <Button sx={{ marginLeft: "1rem", p: '0 1.5rem', height: '100%' }} variant="contained" color="primary">
                                 Create New User
                             </Button>
                         </NoStyleLink>
                     </Box>
                 </Box>
-                <TableContainer>
+                <StyledTableContainer>
                     <Table>
                         <CustomTableHead
                             columns={TABLE_HEAD}
@@ -153,7 +177,7 @@ const UserListPage: FC = () => {
                             ))}
                         </TableBody>
                     </Table>
-                </TableContainer>
+                </StyledTableContainer>
                 <Box display="flex" justifyContent="center" p={2}>
                     <Pagination count={3} page={1} />
                 </Box>
