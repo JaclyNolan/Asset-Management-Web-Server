@@ -1,8 +1,8 @@
 import CancelPresentationRoundedIcon from '@mui/icons-material/CancelPresentationRounded';
-import { Box, BoxProps, Divider, IconButton, Popover, Popper, styled, Typography } from "@mui/material";
-import { FC, ReactNode, useState } from "react";
+import { Box, BoxProps, Divider, IconButton, Paper, Popper, styled, Typography } from "@mui/material";
+import { FC, ReactNode, useEffect, useRef } from "react";
 
-interface PopoverProps {
+interface PopperProps {
     elAnchor: HTMLElement | null;
     open: boolean;
     handleClose: () => void;
@@ -14,49 +14,63 @@ interface PopoverProps {
 const TitleBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
-    backgroundColor: theme.palette.lightGrey.main,
+    backgroundColor: theme.palette.grey[200], // Use appropriate grey color
     color: theme.palette.primary.main,
     alignItems: 'center',
-    padding: '0 1rem 0 1rem'
-}))
+    padding: '0 1rem',
+}));
 
 const ContentBox = styled(Box)(({ theme }) => ({
-    padding: '1rem 1rem 1rem 1rem',
+    padding: '1rem',
     backgroundColor: theme.palette.background.paper,
 }));
 
-const CustomPopover: FC<PopoverProps> = ({ elAnchor, open, handleClose, renderTitle, renderDescription, boxProps, ...props }) => {
+const CustomPopper: FC<PopperProps> = ({ elAnchor, open, handleClose, renderTitle, renderDescription, boxProps, ...props }) => {
+    const popperRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleOutsideClick = (event: MouseEvent) => {
+            if (popperRef.current && !popperRef.current.contains(event.target as Node)) {
+                handleClose();
+            }
+        };
+
+        if (open) {
+            document.addEventListener('mousedown', handleOutsideClick);
+        } else {
+            document.removeEventListener('mousedown', handleOutsideClick);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleOutsideClick);
+        };
+    }, [open, handleClose]);
+
     return (
-        <Popover
+        <Popper
             open={open}
             anchorEl={elAnchor}
-            onClose={handleClose}
-            anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
+            placement="bottom-start"
             {...props}
         >
-            <Box {...boxProps}>
-                <TitleBox>
-                    <Typography id="modal-title" variant="h6">
-                        {renderTitle()}
-                    </Typography>
-                    <IconButton onClick={handleClose}>
-                        <CancelPresentationRoundedIcon color='primary'/>
-                    </IconButton>
-                </TitleBox>
-                <Divider/>
-                <ContentBox>
-                    {renderDescription()}
-                </ContentBox>
-            </Box>
-        </Popover>
+            <Paper elevation={3} ref={popperRef}>
+                <Box {...boxProps}>
+                    <TitleBox>
+                        <Typography variant="h6">
+                            {renderTitle()}
+                        </Typography>
+                        <IconButton onClick={handleClose}>
+                            <CancelPresentationRoundedIcon color='primary' />
+                        </IconButton>
+                    </TitleBox>
+                    <Divider />
+                    <ContentBox>
+                        {renderDescription()}
+                    </ContentBox>
+                </Box>
+            </Paper>
+        </Popper>
     )
 }
 
-export default CustomPopover
+export default CustomPopper;

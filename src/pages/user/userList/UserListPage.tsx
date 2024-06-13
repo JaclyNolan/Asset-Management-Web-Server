@@ -135,7 +135,6 @@ const UserListPage: FC = () => {
                             {users.map((user) => (
                                 <TableRow
                                     key={user.id}
-
                                 >
                                     <CustomTableCell onClick={handleRowClick}>{user.id}</CustomTableCell>
                                     <CustomTableCell onClick={handleRowClick}>{user.name}</CustomTableCell>
